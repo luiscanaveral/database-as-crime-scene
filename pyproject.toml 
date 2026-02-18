@@ -1,0 +1,6 @@
+[project]
+name = "database-as-crime-scene"
+version = "0.1.0"
+
+[tool.setuptools.packages.find]
+where = ["src"]
