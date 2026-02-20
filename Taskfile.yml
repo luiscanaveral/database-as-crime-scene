@@ -26,9 +26,16 @@ tasks:
     silent: true
   local:up:
     cmds:
-      - docker compose down
       - docker compose down -v
+      - docker compose build --no-cache
       - docker compose up -d
+  local:jupyter:bash:
+    cmds:
+      - docker compose exec spark-notebook bash
+  local:jupyter:install:
+    desc: Install package in editable mode in the Jupyter container
+    cmds:
+      - docker compose exec spark-notebook pip install -e .
   local:database:explaing:user_feed:
     cmds:
       - cat ./notebooks/sql/user_feed.sql | docker exec -i postgres_db psql -U postgres -d mydb

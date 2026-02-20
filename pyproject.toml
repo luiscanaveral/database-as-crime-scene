@@ -1,6 +1,13 @@
 [project]
 name = "database-as-crime-scene"
 version = "0.1.0"
+dependencies = [
+    "jupysql",
+    "sqlalchemy",
+    "psycopg2-binary",
+    "pandas",
+    "python-dotenv"
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,24 +1,41 @@
-FROM jupyter/base-notebook
+FROM python:3.11-slim
 
-USER root
+# Avoid Python buffering
+ENV PYTHONUNBUFFERED=1
 
-# Install everything directly into base env
-RUN conda install -y -c conda-forge \
-    python=3.11 \
+# Install system deps for psycopg2
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create working directory
+WORKDIR /app
+
+# Copy only necessary files
+COPY pyproject.toml .
+COPY src ./src
+COPY notebooks ./notebooks
+
+# Install Python packages
+RUN pip install --no-cache-dir \
+    notebook \
+    jupyterlab \
     jupysql \
-    psycopg2 \
     sqlalchemy \
+    psycopg2-binary \
     pandas \
-    ipykernel \
-    && conda clean -afy
+    python-dotenv \
+    toml
 
-USER jovyan
-
-WORKDIR /home/jovyan/app
-
-COPY --chown=jovyan:users pyproject.toml .
-COPY --chown=jovyan:users src ./src
-
+# Install the package in editable mode
 RUN pip install -e .
 
-ENV PYTHONPATH=/home/jovyan/app/src
+# Set Python path
+ENV PYTHONPATH=/app/src
+
+# Expose Jupyter port
+EXPOSE 8888
+
+# Start Jupyter
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--notebook-dir=/app/notebooks"]

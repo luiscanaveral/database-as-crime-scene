@@ -3,3 +3,10 @@
 
 # Database
 *.sql.backup
+
+.ipynb_checkpoints
+
+*.egg-info
+*.egg-info/*
+__pycache__
+*.pyc

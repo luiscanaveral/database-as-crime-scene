@@ -1,0 +1,34 @@
+erDiagram
+
+  publicusers_profile {
+    bigserial id PK
+    text email UK
+    text name
+    timestamptz created_at
+  }
+
+  publicfriends {
+    int8 user_id PK
+    int8 friend_id PK
+    timestamptz created_at
+  }
+
+  publicposts {
+    bigserial id PK
+    int8 fk_user_id FK
+    text content
+    timestamptz created_at
+  }
+
+  publiccomments {
+    bigserial id PK
+    int8 fk_user_id FK
+    int8 fk_post_id FK
+    text content
+    timestamptz created_at
+  }
+
+  publicusers_profile ||--o{ publiccomments : "foreign key"
+  publicusers_profile ||--o{ publicfriends : "foreign key"
+  publicusers_profile ||--o{ publicposts : "foreign key"
+  publicposts ||--o{ publiccomments : "foreign key"
