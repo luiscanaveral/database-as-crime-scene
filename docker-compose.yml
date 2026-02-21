@@ -6,16 +6,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: mydb
+      POSTGRES_MAX_WAL_SIZE: 8GB
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./.docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./.local/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
   notebook:
     build: 
       context: .
-      dockerfile: .jupyter/Dockerfile
+      dockerfile: .local/notebook/Dockerfile
     ports:
       - "8888:8888"
     volumes:
@@ -26,29 +27,6 @@ services:
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
     depends_on:
       - postgres
-
-  
-
-  #spark-notebook:
-  #  build: 
-  #    context: .
-  #    dockerfile: .jupyter/Dockerfile
-  #  container_name: customjupiter
-  #  env_file:
-  #    - .env
-  #  user: root
-  #  ports:
-  #    - "9999:8888"
-    #  - "15002:15002"
-    #environment:
-    #  - GRANT_SUDO=yes
-
-  #  extra_hosts:
-  #    - "host.docker.internal:host-gateway"
-  #  volumes:
-   #   - ./notebooks:/home/jovyan/work
-   #   - ./src:/home/jovyan/src
-   # command: start-notebook.sh --NotebookApp.password='sha256:81a1dcc8131b:b966f76e9b8d3936febf46f71ceb24f66fc62e468680e6cf4f54b69afc848980'
 
 volumes:
   postgres_data:

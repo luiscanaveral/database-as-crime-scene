@@ -38,4 +38,4 @@ ENV PYTHONPATH=/app/src
 EXPOSE 8888
 
 # Start Jupyter
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--notebook-dir=/app/notebooks"]
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--notebook-dir=/app/notebooks", "--NotebookApp.token=''", "--NotebookApp.password=''"]
