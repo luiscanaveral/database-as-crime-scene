@@ -2,6 +2,11 @@
 
 version: '3'
 
+includes:
+    schemacrawler: 
+      taskfile: ./.tasks/schemacrawler.yml  
+      dir: ./
+
 vars:
   GREETING: Hello, World!
   CONTAINER: docker exec -i postgres_db psql -U postgres -d mydb
@@ -58,88 +63,7 @@ tasks:
   local:database:explaing:friends_posts:
     cmds:
       - cat ./sql/friends_posts.sql | {{.CONTAINER}}
-  local:database:diagram:
-    desc: Generate database schema diagram using SchemaCrawler
-    cmds:
-      - |
-        docker run --rm \
-          --network host \
-          -v "$(pwd):/output" \
-          schemacrawler/schemacrawler:latest \
-          /opt/schemacrawler/bin/schemacrawler.sh \
-          --server=postgresql \
-          --host=host.docker.internal \
-          --port=5432 \
-          --database=mydb \
-          --user=postgres \
-          --password=postgres \
-          --info-level=standard \
-          --command=schema \
-          --output-format=png \
-          --output-file=./.documentation/schema-diagram.png
-      - echo "Schema diagram generated at schema-diagram.png"
-  local:database:diagram:mermaid:
-    desc: Generate database schema diagram using SchemaCrawler
-    cmds:
-      - |
-        {{.SCHEMACRAWLER_EXEC}} --schemas="public.*" \
-            --portable=names \
-            --info-level=standard \
-            --command script \
-            --script-language python \
-            --script mermaid.py \
-            --output-file {{.SCHEMACRAWLER_SHARE_PATH}}sc.mmd
-      - echo "Schema diagram generated at schema-diagram.png"
-  local:database:diagram:graphviz:
-    desc: Generate database schema diagram using SchemaCrawler
-    cmds:
-      - |
-        {{.SCHEMACRAWLER_EXEC}} \
-            --portable=names \
-            --info-level=detailed \
-            --command schema \
-            --load-row-counts \
-            --title "Database" \
-            --output-format=png --output-file={{.SCHEMACRAWLER_SHARE_PATH}}er.png
-      - echo "Schema diagram generated"
-  local:database:diagram:graphviz:indexes:
-    desc: Generate database schema diagram using SchemaCrawler
-    cmds:
-      - |
-        {{.SCHEMACRAWLER_EXEC}} --schemas="public.*" \
-            --portable=names \
-            --info-level=detailed \
-            --command details \
-            --load-row-counts \
-
-            --title "Database" \
-            --output-format=png --output-file={{.SCHEMACRAWLER_SHARE_PATH}}indexes.png
-      - echo "Schema diagram generated"
-  local:database:diagram:dbml:
-    desc: Generate database schema diagram using SchemaCrawler
-    cmds:
-      - |
-        {{.SCHEMACRAWLER_EXEC}} --schemas="public.*" \
-            --portable=names \
-            --info-level=standard \
-            --command script \
-            --parents 1 \
-            --script-language python \
-            --script dbml.py \
-            --output-file {{.SCHEMACRAWLER_SHARE_PATH}}sc.dbml
-
-      - echo "Schema diagram generated"
-  local:database:diagram:json:
-    desc: Generate database schema diagram using SchemaCrawler
-    cmds:
-      - |
-        {{.SCHEMACRAWLER_EXEC}} --schemas="public.*" \
-            --info-level=maximum \
-            --command list \
-            --output-format=json \
-            --output-file {{.SCHEMACRAWLER_SHARE_PATH}}schema.json
-
-      - echo "Schema diagram generated"
+  
     
 
 
