@@ -1,0 +1,9 @@
+{
+    "kiroAgent.configureMCP": "Disabled",
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/.pytest_cache": true,
+        "**/*.egg-info/": true
+    }
+}

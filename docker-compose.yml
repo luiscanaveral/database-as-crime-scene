@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST_INSIDE_CONTAINER}:${DB_PORT}/${DB_NAME}
     depends_on:
       - postgres
 

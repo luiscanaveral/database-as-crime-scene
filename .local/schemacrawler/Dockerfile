@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-jre
 
 ARG SC_VERSION=17.6.2
 
-RUN apt-get update && apt-get install -y unzip curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y unzip curl graphviz && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
 

@@ -26,6 +26,7 @@ RUN pip install --no-cache-dir \
     psycopg2-binary \
     pandas \
     python-dotenv \
+    "rich[jupyter]" \
     toml
 
 # Install the package in editable mode

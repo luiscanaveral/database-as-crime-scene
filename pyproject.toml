@@ -6,8 +6,17 @@ dependencies = [
     "sqlalchemy",
     "psycopg2-binary",
     "pandas",
-    "python-dotenv"
+    "python-dotenv",
+    "pylint",
+    "pydeps",
+    "pdoc3",
+    "rich",
+    "faker"
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.jupysql.SqlMagic]
+feedback = true
+autopandas = false

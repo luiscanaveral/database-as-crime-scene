@@ -1,6 +1,9 @@
-import os
+from rich.console import Console
+from rich.syntax import Syntax
+console = Console()
+from common.decorators.singleton import singleton
 
-connection_string = ""
+
 
 class Notebook:
    
@@ -8,14 +11,21 @@ class Notebook:
         print("Hello")
     def setup(self):
         Notebook.build_connection_string()
-    def build_connection_string(self):
-        DB_HOST = os.getenv('DB_HOST')
-        DB_PORT = os.getenv('DB_PORT')
-        DB_NAME = os.getenv('DB_NAME')
-        DB_USER = os.getenv('DB_USER')
-        DB_PASSWORD = os.getenv('DB_PASSWORD')
-        connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-        return connection_string
-        
-        
+    def print(*args):
+        console.print(args)
+    def print_sql(multi_line_code):
+        syntax = Syntax(
+            multi_line_code,
+            "sql",
+            theme="ansi_light",
+            line_numbers=True,
+        )
+        console.print(syntax)
+
+@singleton        
+class DatabaseAsCrimeScene:
+    def __init__(self):
+        self.data = []
+    def setup(self):
+        print("Hola")
     

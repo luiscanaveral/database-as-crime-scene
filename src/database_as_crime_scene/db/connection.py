@@ -1,24 +1,49 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
+import pandas as pd
 
 
 def get_database_url() -> str:
     """
-    Build PostgreSQL connection string from environment variables.
+    build connection string based on ENV vars
     """
-    user = os.environ["DB_USER"]
-    password = os.environ["DB_PASSWORD"]
-    host = os.environ["DB_HOST"]
-    port = os.environ.get("DB_PORT", "5432")
-    db = os.environ["DB_PASSWORD"]
+    return (
+        f"postgresql://"
+        f"{os.environ['DB_USER']}:"
+        f"{os.environ['DB_PASSWORD']}@"
+        f"{os.environ['DB_HOST_INSIDE_CONTAINER']}:"
+        f"{os.environ.get('DB_PORT', '5432')}/"
+        f"{os.environ['DB_NAME']}"
+    )
 
-    return f"postgresql://{user}:{password}@{host}:{port}/{db}"
 
 
-
-def get_engine() -> Engine:
+def get_engine(dbschema='public') -> Engine:
     """
     Creates SQLAlchemist Engine 
     """
-    return create_engine(get_database_url(), future=True)
+    return create_engine(get_database_url(), 
+        future=True, 
+        connect_args={'options': f"-csearch_path={dbschema}"}
+    )
+
+def get_query(sql):
+    """
+    Gets Pandas Dataframe based on SQL code
+    """
+    df = pd.read_sql(sql, get_engine())
+    return df
+
+def get_execution_plan(sql):
+    """
+    Get Execution plan for sql script in JSON Format
+    """
+    df = get_query(f"""
+    EXPLAIN (
+        ANALYZE,
+        BUFFERS,
+        VERBOSE,
+        FORMAT JSON
+        ) {sql}""")
+    return df["QUERY PLAN"][0]
