@@ -1,0 +1,91 @@
+import re
+import java
+
+IdentifiersBuilder = java.type("schemacrawler.schema.IdentifiersBuilder")
+IdentifierQuotingStrategy = java.type("schemacrawler.schema.IdentifierQuotingStrategy")
+MetaDataUtility = java.type("schemacrawler.utility.MetaDataUtility")
+
+if title:
+    project_name = title
+else:
+    project_name = catalog.getCrawlInfo().getRunId()
+
+print('Project "' + project_name + '" {')
+print('  database_type: "' + re.sub(r'\"', '', catalog.getCrawlInfo().getDatabaseVersion().toString()) + '"')
+print("  Note: '''")
+print(catalog.getCrawlInfo())
+print("  '''")
+print("}")
+
+identifiers = (IdentifiersBuilder.builder()
+               .withIdentifierQuotingStrategy(IdentifierQuotingStrategy.quote_all)
+               .toOptions())
+
+# Tables and columns
+for table in catalog.getTables():
+    print('Table "' + re.sub(r'\"', '', table.getFullName()) + '" {')
+    for column in table.getColumns():
+        print('  "' + column.getName() + '" "' + column.getColumnDataType().getName() + '"', end='')
+        print(' [', end='')
+        if not column.isNullable():
+            print('not ', end='')
+        print('null', end='')
+        if column.hasDefaultValue():
+            print(', default: "' + column.getDefaultValue() + '"', end='')
+        if column.hasRemarks():
+            print(', note: "' + column.getRemarks() + '"', end='')
+        print(']', end='')
+        print()
+    if table.hasRemarks():
+        print("  Note: '''")
+        print(table.getRemarks())
+        print("  '''")
+    if table.hasPrimaryKey() or not table.getIndexes().isEmpty():
+        print('  indexes {')
+        if table.hasPrimaryKey():
+            primaryKey = table.getPrimaryKey()
+            print('    (' + MetaDataUtility.getColumnsListAsString(primaryKey, identifiers) + ') [pk]')
+        if not table.getIndexes().isEmpty():
+            for index in table.getIndexes():
+                if (table.hasPrimaryKey() and
+                    MetaDataUtility.getColumnsListAsString(table.getPrimaryKey(), identifiers) ==
+                    MetaDataUtility.getColumnsListAsString(index, identifiers)):
+                    continue
+                print('    (' + MetaDataUtility.getColumnsListAsString(index, identifiers) + ')', end='')
+                print(' [name: "' + index.getName() + '"', end='')
+                if index.isUnique():
+                    print(', unique', end='')
+                print(']')
+        print('  }')
+    print('}')
+    print('')
+
+# Foreign keys - build column lists from references (3-arg getColumnsListAsString not supported in GraalPy)
+for table in catalog.getTables():
+    for fk in table.getExportedForeignKeys():
+        pkTable = None
+        fkTable = None
+        pk_cols = []
+        fk_cols = []
+        for ref in fk.getColumnReferences():
+            pkTable = ref.getPrimaryKeyColumn().getParent()
+            fkTable = ref.getForeignKeyColumn().getParent()
+            pk_cols.append('"' + ref.getPrimaryKeyColumn().getName() + '"')
+            fk_cols.append('"' + ref.getForeignKeyColumn().getName() + '"')
+        print('Ref "' + fk.getName() + '" {')
+        print('  "' + re.sub(r'\"', '', pkTable.getFullName()) + '".(' + ', '.join(pk_cols) + ')'
+              + ' < '
+              + '"' + re.sub(r'\"', '', fkTable.getFullName()) + '".(' + ', '.join(fk_cols) + ')', end='')
+        print(' [update: ' + fk.getUpdateRule().toString() + ', delete: ' + fk.getDeleteRule().toString() + ']', end='')
+        print()
+        print("}")
+        print('')
+print('')
+
+# Table groups
+for schema in catalog.getSchemas():
+    print('TableGroup "' + re.sub(r'\"', '', schema.getFullName()) + ' " {')
+    for table in catalog.getTables(schema):
+        print('  "' + re.sub(r'\"', '', table.getFullName()) + '"')
+    print('}')
+    print('')
