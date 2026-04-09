@@ -11,6 +11,7 @@ dependencies = [
     "pydeps",
     "pdoc3",
     "rich",
+    "rich-tools",
     "faker"
 ]
 

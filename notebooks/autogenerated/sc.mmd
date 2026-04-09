@@ -1,5 +1,26 @@
 erDiagram
 
+  publicevents {
+    uuid id PK
+    int4 user_id
+    varchar event_type
+    timestamp created_at
+  }
+
+  publiclogs {
+    serial id PK
+    varchar session_id
+    text message
+    timestamp timestamp
+  }
+
+  publicmetrics {
+    serial id PK
+    varchar metric_name
+    float8 value
+    timestamp recorded_at
+  }
+
   publicusers_profile {
     bigserial id PK
     text email UK

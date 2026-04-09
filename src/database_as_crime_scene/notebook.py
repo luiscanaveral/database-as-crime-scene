@@ -2,7 +2,7 @@ from rich.console import Console
 from rich.syntax import Syntax
 console = Console()
 from common.decorators.singleton import singleton
-
+from common.logger import log
 
 
 class Notebook:

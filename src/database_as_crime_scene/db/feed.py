@@ -7,6 +7,7 @@ from datetime import datetime
 from sqlalchemy import text
 from faker import Faker
 from .connection import get_engine
+from ..common.logger import log
 
 fake = Faker()
 
@@ -450,32 +451,113 @@ def seed_database_with_faker(
     Returns:
         Dictionary with counts of inserted records
     """
-    print(f"Generating {num_users} fake users...")
+    start_time = datetime.now()
+    
+    log(f"Generating {num_users} fake users...")
     users_count = generate_fake_users(num_users)
     
-    print(f"Generating posts ({posts_per_user} per user)...")
+    log(f"Generating posts ({posts_per_user} per user)...")
     posts_count = generate_fake_posts(posts_per_user=posts_per_user)
     
-    print(f"Generating comments ({comments_per_post} per post)...")
+    log(f"Generating comments ({comments_per_post} per post)...")
     comments_count = generate_fake_comments(comments_per_post=comments_per_post)
     
-    print(f"Generating friendships ({friendships_per_user} per user)...")
+    log(f"Generating friendships ({friendships_per_user} per user)...")
     friendships_count = generate_bulk_friendships(
         friendships_per_user=friendships_per_user
     )
     
+    log("Generating 10,000,000 metrics rows...")
+    metrics_count = generate_bulk_metrics(10_000_000)
+
+    log("Generating 10,000,000 events rows...")
+    events_count = generate_bulk_events(10_000_000)
+
+    log("Generating 10,000,000 logs rows...")
+    logs_count = generate_bulk_logs(10_000_000)
+
     results = {
         "users": users_count,
         "posts": posts_count,
         "comments": comments_count,
-        "friendships": friendships_count
+        "friendships": friendships_count,
+        "metrics": metrics_count,
+        "events": events_count,
+        "logs": logs_count,
     }
-    
-    print("\nSeeding complete!")
+
+    end_time = datetime.now()
+    duration = end_time - start_time
+
+    log(f"\nSeeding complete in {duration}!")
     for key, value in results.items():
-        print(f"  {key}: {value}")
+        log(f"  {key}: {value}", type="info")
     
     return results
+
+
+def generate_bulk_metrics(count: int = 1_000_000, batch_size: int = 100_000) -> int:
+    """Insert bulk rows into metrics using DB-side generation."""
+    engine = get_engine()
+    inserted = 0
+
+    with engine.begin() as conn:
+        for start in range(1, count + 1, batch_size):
+            end = min(start + batch_size - 1, count)
+            result = conn.execute(text("""
+                INSERT INTO metrics (metric_name, value, recorded_at)
+                SELECT
+                    (ARRAY['cpu_usage','memory_usage','disk_io','network_latency','error_rate'])[floor(random() * 5 + 1)::int],
+                    round((random() * 100)::numeric, 2),
+                    now() - (random() * interval '365 days')
+                FROM generate_series(:start, :end)
+            """), {"start": start, "end": end})
+            inserted += result.rowcount
+
+    return inserted
+
+
+def generate_bulk_events(count: int = 1_000_000, batch_size: int = 100_000) -> int:
+    """Insert bulk rows into events using DB-side generation."""
+    engine = get_engine()
+    inserted = 0
+
+    with engine.begin() as conn:
+        for start in range(1, count + 1, batch_size):
+            end = min(start + batch_size - 1, count)
+            result = conn.execute(text("""
+                INSERT INTO events (id, user_id, event_type, created_at)
+                SELECT
+                    gen_random_uuid(),
+                    floor(random() * 10000 + 1)::int,
+                    (ARRAY['click','view','purchase','signup','logout'])[floor(random() * 5 + 1)::int],
+                    now() - (random() * interval '365 days')
+                FROM generate_series(:start, :end)
+            """), {"start": start, "end": end})
+            inserted += result.rowcount
+
+    return inserted
+
+
+def generate_bulk_logs(count: int = 1_000_000, batch_size: int = 100_000) -> int:
+    """Insert bulk rows into logs using DB-side generation."""
+    engine = get_engine()
+    inserted = 0
+
+    with engine.begin() as conn:
+        for start in range(1, count + 1, batch_size):
+            end = min(start + batch_size - 1, count)
+            result = conn.execute(text("""
+                INSERT INTO logs (session_id, message, timestamp)
+                SELECT
+                    'session-' || floor(random() * 100000 + 1)::int,
+                    (ARRAY['INFO: request processed','WARN: slow query','ERROR: connection failed','DEBUG: cache miss'])[floor(random() * 4 + 1)::int] || ' #' || gs,
+                    now() - (random() * interval '365 days')
+                FROM generate_series(:start, :end) gs
+            """), {"start": start, "end": end})
+            inserted += result.rowcount
+
+    return inserted
 
 
 if __name__ == "__main__":

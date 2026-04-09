@@ -47,3 +47,11 @@ tasks:
     cmds:
       - "{{.SC_DOCKER}} {{.SC_CONN}} --portable=names --info-level=maximum --command serialize --output-format=json --output-file {{.SCHEMACRAWLER_SHARE_PATH}}schema.json"
       - echo "Schema diagram generated"
+  all:
+    desc: run all together
+    cmds:
+      - task: mermaid
+      - task: graphviz
+      - task: graphviz:indexes
+      - task: dbml
+      - task: json
