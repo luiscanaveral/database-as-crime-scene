@@ -4,18 +4,25 @@ sometimes, Urgent incidents drives you to
 # PostgreSQL Docker Setup
 
 A simple Docker Compose setup for PostgreSQL with initialization script.
+## Prerequisites
+
+- docker
+- plantuml
 
 ## Quick Start
 
 ```bash
-# Start the database
-docker-compose up -d
+task local:up:refresh  
+# Seed with mock data
+task local:database:seed:large    
 
-# Stop the database
-docker-compose down
 
-# Stop and remove volumes (deletes all data)
-docker-compose down -v
+```
+Brownse on localhost:8888
+
+```bash
+## Optional operations
+task schemacrawler:graphviz:indexes
 ```
 
 ## Connection Details

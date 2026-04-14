@@ -12,7 +12,8 @@ dependencies = [
     "pdoc3",
     "rich",
     "rich-tools",
-    "faker"
+    "faker",
+    "numpy"
 ]
 
 [tool.setuptools.packages.find]

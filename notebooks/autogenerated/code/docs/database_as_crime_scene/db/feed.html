@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.6">
-<title>database_as_crime_scene.notebook API documentation</title>
+<title>database_as_crime_scene.db.feed API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
@@ -33,7 +33,7 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>database_as_crime_scene.notebook</code></h1>
+<h1 class="title">Module <code>database_as_crime_scene.db.feed</code></h1>
 </header>
 <section id="section-intro">
 </section>
@@ -44,82 +44,6 @@ el.replaceWith(d);
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-classes">Classes</h2>
-<dl>
-<dt id="database_as_crime_scene.notebook.Notebook"><code class="flex name class">
-<span>class <span class="ident">Notebook</span></span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class Notebook:
-   
-    def sayHello():
-        print(&#34;Hello&#34;)
-    def setup(self):
-        Notebook.build_connection_string()
-    def build_connection_string(self):
-        DB_HOST = os.getenv(&#39;DB_HOST&#39;)
-        DB_PORT = os.getenv(&#39;DB_PORT&#39;)
-        DB_NAME = os.getenv(&#39;DB_NAME&#39;)
-        DB_USER = os.getenv(&#39;DB_USER&#39;)
-        DB_PASSWORD = os.getenv(&#39;DB_PASSWORD&#39;)
-        connection_string = f&#34;postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}&#34;
-        return connection_string</code></pre>
-</details>
-<div class="desc"></div>
-<h3>Methods</h3>
-<dl>
-<dt id="database_as_crime_scene.notebook.Notebook.build_connection_string"><code class="name flex">
-<span>def <span class="ident">build_connection_string</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def build_connection_string(self):
-    DB_HOST = os.getenv(&#39;DB_HOST&#39;)
-    DB_PORT = os.getenv(&#39;DB_PORT&#39;)
-    DB_NAME = os.getenv(&#39;DB_NAME&#39;)
-    DB_USER = os.getenv(&#39;DB_USER&#39;)
-    DB_PASSWORD = os.getenv(&#39;DB_PASSWORD&#39;)
-    connection_string = f&#34;postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}&#34;
-    return connection_string</code></pre>
-</details>
-<div class="desc"></div>
-</dd>
-<dt id="database_as_crime_scene.notebook.Notebook.sayHello"><code class="name flex">
-<span>def <span class="ident">sayHello</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def sayHello():
-    print(&#34;Hello&#34;)</code></pre>
-</details>
-<div class="desc"></div>
-</dd>
-<dt id="database_as_crime_scene.notebook.Notebook.setup"><code class="name flex">
-<span>def <span class="ident">setup</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def setup(self):
-    Notebook.build_connection_string()</code></pre>
-</details>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
-</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -129,19 +53,7 @@ el.replaceWith(d);
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="database_as_crime_scene" href="index.html">database_as_crime_scene</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="database_as_crime_scene.notebook.Notebook" href="#database_as_crime_scene.notebook.Notebook">Notebook</a></code></h4>
-<ul class="">
-<li><code><a title="database_as_crime_scene.notebook.Notebook.build_connection_string" href="#database_as_crime_scene.notebook.Notebook.build_connection_string">build_connection_string</a></code></li>
-<li><code><a title="database_as_crime_scene.notebook.Notebook.sayHello" href="#database_as_crime_scene.notebook.Notebook.sayHello">sayHello</a></code></li>
-<li><code><a title="database_as_crime_scene.notebook.Notebook.setup" href="#database_as_crime_scene.notebook.Notebook.setup">setup</a></code></li>
-</ul>
-</li>
+<li><code><a title="database_as_crime_scene.db" href="index.html">database_as_crime_scene.db</a></code></li>
 </ul>
 </li>
 </ul>

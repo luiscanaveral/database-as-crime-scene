@@ -1,0 +1,71 @@
+classDiagram
+    class Notebook {
+        +sayHello()
+        +setup()
+        +print()
+        +print_sql()
+    }
+    class DatabaseAsCrimeScene {
+        +__init__()
+        +setup()
+    }
+    class database_as_crime_scene_common_logger {
+        <<module>>
+        +log(message, type)
+    }
+    class database_as_crime_scene_db_feed {
+        <<module>>
+        +add_users(users, batch_size)
+        +add_posts(posts, batch_size)
+        +add_comments(comments, batch_size)
+        +add_friends(friendships, batch_size)
+        +generate_bulk_users(start_id, count, email_template, name_template)
+        +generate_bulk_posts_for_users(user_ids, posts_per_user_min, posts_per_user_max, content_template)
+        +generate_bulk_comments_for_posts(post_ids, comments_per_post_max)
+        +generate_bulk_friendships(user_ids, friendships_per_user)
+        +generate_fake_users(count, batch_size)
+        +generate_fake_posts(user_ids, posts_per_user, batch_size)
+        +generate_fake_comments(post_ids, comments_per_post, batch_size)
+        +seed_database_with_faker(num_users, posts_per_user, comments_per_post, friendships_per_user)
+        +generate_bulk_metrics(count, batch_size)
+        +generate_bulk_events(count, batch_size)
+        +generate_bulk_logs(count, batch_size)
+    }
+    class database_as_crime_scene_db_connection {
+        <<module>>
+        +get_database_url()
+        +get_engine(dbschema)
+        +get_query(sql)
+        +get_execution_plan(sql)
+    }
+    class QueryBuilder {
+        +get_selectivity_query()
+        +get_index_data_query()
+    }
+    class Forensic {
+        +init()
+        +_get_indexes_metadata()
+        +_get_selectivity()
+        +check_indexes()
+        +compute_score()
+        +classify()
+        +format_size()
+    }
+    class database_as_crime_scene_jupyter_mermaid_execution_plan {
+        <<module>>
+        +format_label(node)
+        +classify_node(node)
+        +build_execution_tree(plan)
+        +build_flamegraph(plan)
+        +main()
+    }
+    class database_as_crime_scene_jupyter_mermaid {
+        <<module>>
+        +draw(graph)
+        +format_node_label(node)
+        +generate_mermaid_from_execution_plan(plan_json)
+    }
+    class database_as_crime_scene_common_decorators_singleton {
+        <<module>>
+        +singleton(cls)
+    }

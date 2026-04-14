@@ -16,6 +16,28 @@ BEGIN
 
     RAISE NOTICE 'Initializing database schema...';
 
+    -- schemas
+    --CREATE SCHEMA disaster;
+
+    CREATE TABLE metrics (
+        id SERIAL PRIMARY KEY,
+        metric_name VARCHAR(100),
+        value FLOAT,
+        recorded_at TIMESTAMP
+    );
+    CREATE TABLE events (
+        id UUID PRIMARY KEY,
+        user_id INTEGER,
+        event_type VARCHAR(50),
+        created_at TIMESTAMP
+    );
+    CREATE TABLE logs (
+        id SERIAL PRIMARY KEY,
+        session_id VARCHAR(255),  
+        message TEXT,
+        timestamp TIMESTAMP
+    );
+
     -- Tables
     CREATE TABLE users_profile (
         id           BIGSERIAL PRIMARY KEY,
@@ -55,6 +77,10 @@ BEGIN
     CREATE INDEX idx_comments_fk_user_id ON comments (fk_user_id);
     CREATE INDEX idx_friends_user_id ON friends (user_id);
     CREATE INDEX idx_friends_friend_id ON friends (friend_id);
+
+    CREATE INDEX idx_metric_time ON metrics(metric_name, recorded_at);
+    CREATE INDEX idx_session ON logs(session_id);
+
 
     -- Foreign keys
     ALTER TABLE posts
