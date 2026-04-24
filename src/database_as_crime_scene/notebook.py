@@ -1,31 +1,28 @@
-from rich.console import Console
-from rich.syntax import Syntax
-console = Console()
-from common.decorators.singleton import singleton
-from common.logger import log
+from .common.decorators.singleton import singleton
+from .common.logger import log
 
 
 class Notebook:
-   
-    def sayHello():
+    def say_hello(self):
         print("Hello")
-    def setup(self):
-        Notebook.build_connection_string()
-    def print(*args):
-        console.print(args)
-    def print_sql(multi_line_code):
-        syntax = Syntax(
-            multi_line_code,
-            "sql",
-            theme="ansi_light",
-            line_numbers=True,
-        )
-        console.print(syntax)
 
-@singleton        
+    def build_connection_string(self):
+        pass
+
+    def setup(self):
+        self.build_connection_string()
+
+    def print(self, *args):
+        log(args)
+
+    def print_sql(self, multi_line_code):
+        log(multi_line_code, log_type="syntax")
+
+
+@singleton
 class DatabaseAsCrimeScene:
     def __init__(self):
         self.data = []
+
     def setup(self):
         print("Hola")
-    

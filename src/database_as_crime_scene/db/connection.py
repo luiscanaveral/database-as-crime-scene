@@ -1,7 +1,8 @@
 import os
+
+import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
-import pandas as pd
 
 
 def get_database_url() -> str:
@@ -18,15 +19,16 @@ def get_database_url() -> str:
     )
 
 
-
-def get_engine(dbschema='public') -> Engine:
+def get_engine(dbschema="public") -> Engine:
     """
-    Creates SQLAlchemist Engine 
+    Creates SQLAlchemist Engine
     """
-    return create_engine(get_database_url(), 
-        future=True, 
-        connect_args={'options': f"-csearch_path={dbschema}"}
+    return create_engine(
+        get_database_url(),
+        future=True,
+        connect_args={"options": f"-csearch_path={dbschema}"},
     )
+
 
 def get_query(sql):
     """
@@ -34,6 +36,7 @@ def get_query(sql):
     """
     df = pd.read_sql(sql, get_engine())
     return df
+
 
 def get_execution_plan(sql):
     """

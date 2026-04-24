@@ -13,12 +13,31 @@ dependencies = [
     "rich",
     "rich-tools",
     "faker",
-    "numpy"
+    "numpy",
+    "ruff",
+    "black",
+    "isort"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-mock",
+    "ipython"
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
+
 [tool.jupysql.SqlMagic]
 feedback = true
 autopandas = false
+
+[tool.pylint.messages_control]
+disable = [
+    "C0114", # missing-module-docstring
+    "C0115", # missing-class-docstring
+    "C0116", # missing-function-docstring
+    "R0903", # too-few-public-methods
+]

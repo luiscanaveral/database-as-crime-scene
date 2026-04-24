@@ -1,7 +1,6 @@
 import json
 import uuid
 
-
 # ==========================================================
 # CONFIG
 # ==========================================================
@@ -13,6 +12,7 @@ MEDIUM_THRESHOLD_MS = 10
 # ==========================================================
 # NODE LABEL BUILDER
 # ==========================================================
+
 
 def format_label(node):
     lines = []
@@ -52,8 +52,7 @@ def format_label(node):
 
     if "Sort Method" in node:
         lines.append(
-            f"Sort: {node['Sort Method']} "
-            f"({node.get('Sort Space Used','')}kB)"
+            f"Sort: {node['Sort Method']} ({node.get('Sort Space Used', '')}kB)"
         )
 
     if "Shared Hit Blocks" in node:
@@ -65,6 +64,7 @@ def format_label(node):
 # ==========================================================
 # PERFORMANCE CLASSIFICATION
 # ==========================================================
+
 
 def classify_node(node):
     time = node.get("Actual Total Time", 0)
@@ -79,6 +79,7 @@ def classify_node(node):
 # ==========================================================
 # TREE → MERMAID
 # ==========================================================
+
 
 def build_execution_tree(plan):
 
@@ -118,6 +119,7 @@ def build_execution_tree(plan):
 # FLAMEGRAPH GENERATOR 🔥
 # ==========================================================
 
+
 def build_flamegraph(plan):
 
     lines = ["flowchart LR"]
@@ -128,14 +130,12 @@ def build_flamegraph(plan):
         node_type = node.get("Node Type")
 
         time = node.get("Actual Total Time", 0)
-        width = max(1, int(time * 5))
+        # width = max(1, int(time * 5))
 
         label = f"{node_type}<br/>{time:.2f} ms"
         cls = classify_node(node)
 
-        lines.append(
-            f'{node_id}["{label}"]:::{cls}'
-        )
+        lines.append(f'{node_id}["{label}"]:::{cls}')
 
         if parent:
             lines.append(f"{parent} --> {node_id}")
@@ -164,6 +164,7 @@ classDef slow fill:#ffccd5,stroke:#d00000,stroke-width:3px;
 # ==========================================================
 # MAIN
 # ==========================================================
+
 
 def main():
 

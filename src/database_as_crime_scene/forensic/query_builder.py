@@ -1,5 +1,3 @@
-from ..common.decorators.singleton import singleton
-
 QUERY_SELECTIVITY = """
             SELECT
     t.relname AS table_name,
@@ -62,13 +60,14 @@ QUERY_INDEX_METADATA = """
             JOIN pg_class c ON c.oid = s.indexrelid
             JOIN pg_am am ON c.relam = am.oid
             ORDER BY table_name, index_name;
-        """ 
+        """
 
-##@singleton
+
 class QueryBuilder:
     @staticmethod
-    def get_selectivity_query()->str:
+    def get_selectivity_query() -> str:
         return QUERY_SELECTIVITY
+
     @staticmethod
-    def get_index_data_query()->str:
+    def get_index_data_query() -> str:
         return QUERY_INDEX_METADATA
