@@ -463,7 +463,7 @@ def seed_database_with_faker(
 
     log(f"\nSeeding complete in {duration}!")
     for key, value in results.items():
-        log(f"  {key}: {value}", type="info")
+        log(f"  {key}: {value}", log_type="info")
 
     return results
 

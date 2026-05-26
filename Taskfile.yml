@@ -18,6 +18,14 @@ vars:
   PG_CONTAINER: docker exec -i postgres_db psql -U postgres -d mydb
 
 tasks:
+  speak:
+    desc: Say a message aloud (macOS/Windows only)
+    silent: true
+    cmds:
+      - "{{if eq OS \"darwin\"}}say \"{{.MESSAGE}}\"{{else if eq OS \"windows\"}}powershell -Command \"Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('{{.MESSAGE}}')\"{{end}}"
+    requires:
+      vars: [MESSAGE]
+
   default:
     cmds:
       - task --list
@@ -39,7 +47,10 @@ tasks:
     cmds:
       - task: local:up:refresh
       - sleep 10
-      - task: local:database:seed
+      - task: local:database:seed:large
+      - task: speak
+        vars:
+          MESSAGE: "Seed complete"
   local:jupyter:bash:
     cmds:
       - docker compose exec notebook bash
@@ -67,21 +78,33 @@ tasks:
     desc: Seed database with fake data (default 100 users)
     cmds:
       - docker compose exec notebook python -m database_as_crime_scene.db.feed {{.CLI_ARGS}}
+      - task: speak
+        vars:
+          MESSAGE: "Seed complete"
   
   local:database:seed:small:
     desc: Seed database with small amount of fake data (10 users)
     cmds:
       - docker compose exec notebook python -m database_as_crime_scene.db.feed 10 5 3 10
+      - task: speak
+        vars:
+          MESSAGE: "Seed complete"
   
   local:database:seed:medium:
     desc: Seed database with medium amount of fake data (1000 users)
     cmds:
       - docker compose exec notebook python -m database_as_crime_scene.db.feed 1000 10 5 20
+      - task: speak
+        vars:
+          MESSAGE: "Seed complete"
   
   local:database:seed:large:
     desc: Seed database with large amount of fake data (10000 users)
     cmds:
       - docker compose exec notebook python -m database_as_crime_scene.db.feed 10000 15 8 25
+      - task: speak
+        vars:
+          MESSAGE: "Seed complete"
 
   local:forensic:check-indexes:
     desc: Run index analysis using Forensic class
