@@ -16,6 +16,7 @@ WORKDIR /app
 COPY pyproject.toml .
 COPY src ./src
 COPY notebooks ./notebooks
+COPY .local/notebook/jslib ./.local/notebook/jslib
 
 # Install Python packages
 RUN pip install --no-cache-dir \
@@ -31,6 +32,10 @@ RUN pip install --no-cache-dir \
 
 # Install the package in editable mode
 RUN pip install -e .
+
+# Install pg-plan-diagram Mermaid plugin as a Jupyter nbextension
+RUN mkdir -p /usr/local/share/jupyter/nbextensions/pg-plan-diagram && \
+    cp /app/.local/notebook/jslib/pg-plan-diagram.min.js /usr/local/share/jupyter/nbextensions/pg-plan-diagram/
 
 # Set Python path
 ENV PYTHONPATH=/app/src

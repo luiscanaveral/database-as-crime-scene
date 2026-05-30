@@ -33,7 +33,15 @@ tasks:
   docker:build-schemacrawler:
     cmds:
       - docker build -f .local/schemacrawler/Dockerfile -t schemacrawler:custom .
+  local:env:init:
+    desc: Copy .env.sample to .env if not present
+    cmds:
+      - cp -n .env.sample .env
+    status:
+      - test -f .env
+
   local:up:
+    deps: [local:env:init]
     cmds:
       - docker compose down
       - docker compose build --no-cache
@@ -54,6 +62,10 @@ tasks:
   local:jupyter:bash:
     cmds:
       - docker compose exec notebook bash
+  local:jupyter:rebuild:
+    cmds:
+      - docker compose build notebook
+      - docker compose up notebook -d
   local:jupyter:install:
     desc: Install package in editable mode in the Jupyter container
     cmds:

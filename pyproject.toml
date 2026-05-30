@@ -12,6 +12,7 @@ dependencies = [
     "pdoc3",
     "rich",
     "rich-tools",
+    "jupyter_contrib_nbextensions",
     "faker",
     "numpy",
     "ruff",

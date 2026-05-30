@@ -1,6 +1,7 @@
 from rich.console import Console
 from rich.json import JSON
 from rich.markdown import Markdown
+from rich.panel import Panel
 from rich.syntax import Syntax
 from rich_tools import df_to_table
 
@@ -31,5 +32,7 @@ def log(message, log_type: str = "info"):
     elif log_type == "syntax":
         syntax = Syntax(message, "sql", theme="ansi_light", line_numbers=True)
         console.print(syntax)
+    elif log_type == "setup":
+        console.print(Panel.fit(f"[bold cyan]{message}[/bold cyan]", border_style="cyan"))
     else:
         console.print(message)
